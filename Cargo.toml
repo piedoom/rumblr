@@ -1,0 +1,6 @@
+[package]
+name = "rumblr"
+version = "0.1.0"
+authors = ["Alexander Lozada <alexanderpaullozada@gmail.com>"]
+
+[dependencies]
