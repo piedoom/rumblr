@@ -1,6 +1,11 @@
 [package]
 name = "rumblr"
 version = "0.1.0"
-authors = ["Alexander Lozada <alexanderpaullozada@gmail.com>"]
+authors = ["doomy"]
 
 [dependencies]
+hyper = "0.10.12"
+serde_json = "1.0"
+
+[[example]]
+name = "get_blog_info"
