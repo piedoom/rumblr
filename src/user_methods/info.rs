@@ -32,7 +32,7 @@ impl<'a> Info<'a> {
     		vec![], 
     		HttpMethod::Get,
     		&info_path );
-
+z
     	let mut response = String::new();
 
     	self.client.hyper
