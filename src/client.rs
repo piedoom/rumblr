@@ -3,7 +3,7 @@ use oauthcli::{ OAuthAuthorizationHeader, OAuthAuthorizationHeaderBuilder, Signa
 use http_method::HttpMethod;
 use oauthcli::url;
 use user_methods;
-use blog_methods;
+// use blog_methods;
 
 /// The Client struct that we will use to interface with our API
 #[allow(dead_code)]
