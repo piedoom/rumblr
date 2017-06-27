@@ -56,8 +56,4 @@ impl<'a> Client<'a>{
         blog::info::Info::new(&self, blog)
     }
 
-    pub fn avatar(&self, blog: &'a str) -> blog::avatar::Avatar {
-        blog::avatar::Avatar::new(&self, blog)
-    }
-}
 
