@@ -3,6 +3,7 @@ use hyper::method::Method;
 use data::blog::Blog;
 use data::root::{Response};
 use utility;
+use error::Error;
 use super::BLOG_PATH;
 
 /// Blog info
@@ -15,10 +16,10 @@ impl<'a, 'b> Info<'a, 'b> {
 
 	/// return a new `Info` struct
     /// usually called by our Client object
-    pub fn new(client: &'a Client) -> Self {
+    pub fn new(client: &'a Client, blog: &'b str) -> Self {
         Info { 
         	client: client,
-            blog: ""
+            blog: blog
         }
     }
 
@@ -29,7 +30,7 @@ impl<'a, 'b> Info<'a, 'b> {
     }
 
     /// finally send the request and solidify the `Info` struct
-    pub fn send(&mut self) -> Option<Blog> {
+    pub fn send(&mut self) -> Result<Blog, Error> {
 
     	let url = format!("{}/{}/info", BLOG_PATH, self.blog);
 
@@ -38,11 +39,20 @@ impl<'a, 'b> Info<'a, 'b> {
     		Method::Get,
     		&url );
 
-    	let result = utility::send_request(self.client, Method::Get, url, auth_header);
+    	let result = utility::send_and_deserialize(self.client, Method::Get, url, auth_header);
 
-        return match result.response {
-            Response::blog(blog) => Some(blog),
-            _  => None
-        }
+        // error check
+        return match result {
+            // return our data 
+            Ok(t) => {
+                match t.response {
+                    Response::blog(blog) => Ok(blog),
+                    _  => Err(Error::Unknown)
+                }
+            }
+            Err(e) => {
+                Err(e)
+            }
+        }        
     }
 }

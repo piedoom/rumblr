@@ -3,6 +3,7 @@ use data::user::User;
 use data::root::{Response};
 use hyper::method::Method;
 use utility;
+use error::Error;
 use super::USER_PATH;
 
 /// User info has no params, so a builder is unessecary.
@@ -24,8 +25,7 @@ impl<'a> Info<'a> {
     }
 
     /// finally send the request
-    pub fn send(&self) -> Option<User> {
-
+    pub fn send(&self) -> Result<User, Error> {
 
     	let url = format!("{}/info", USER_PATH);
 
@@ -34,11 +34,20 @@ impl<'a> Info<'a> {
     		Method::Get,
     		&url );
         
-        let result = utility::send_request(self.client, Method::Get, url, auth_header);
+        let result = utility::send_and_deserialize(self.client, Method::Get, url, auth_header);
 
-        return match result.response {
-            Response::user(user) => Some(user),
-            _  => None
+        // error check
+        return match result {
+            // return our data 
+            Ok(t) => {
+                match t.response {
+                    Response::user(user) => Ok(user),
+                    _  => Err(Error::Unknown)
+                }
+            }
+            Err(e) => {
+                Err(e)
+            }
         }
     }
 }

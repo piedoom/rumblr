@@ -49,11 +49,15 @@ impl<'a> Client<'a>{
 
     /// METHODS
     pub fn user_info(&self) -> user::info::Info {
-        user::info::Info::new(self)
+        user::info::Info::new(&self)
     }
 
-    pub fn blog_info(&self) -> blog::info::Info {
-        blog::info::Info::new(self)
+    pub fn blog_info(&self, blog: &'a str) -> blog::info::Info {
+        blog::info::Info::new(&self, blog)
+    }
+
+    pub fn avatar(&self, blog: &'a str) -> blog::avatar::Avatar {
+        blog::avatar::Avatar::new(&self, blog)
     }
 }
 

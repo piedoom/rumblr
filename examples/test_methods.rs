@@ -22,6 +22,10 @@ fn main(){
     println!("{}", r.unwrap().name);
 
     // get staff's blog name
-    let r = c.blog_info().blog("staff").send();
+    let r = c.blog_info("staff").send();
     println!("{}", r.unwrap().title);
+
+    // get staff's image
+    let r = c.avatar("staff").size(512).send();
+    println!("{:?}", r.unwrap());
 }
