@@ -1,7 +1,7 @@
 /// Contains information about a user blog.  
 /// Some data is wrapped in an optional as it may not be visible depending on if the current user is the admin
 /// of the blog.
-pub struct BlogInfo {
+pub struct Blog {
 
 	/// These intial fields are accessible publicly.  All `BlogInfo` structures
 	/// will have these values, so there is no need for optionals here.

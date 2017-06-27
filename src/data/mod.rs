@@ -1,2 +1,3 @@
-pub mod user_info;
-pub mod blog_info;
+pub mod user;
+pub mod blog;
+pub mod root;

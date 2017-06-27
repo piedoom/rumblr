@@ -2,6 +2,9 @@ use client::Client;
 use http_method::HttpMethod;
 use hyper::header::Authorization;
 use std::io::Read;
+use serde_json;
+use data::user::User;
+use data::root::{Root,Response};
 use super::USER_PATH;
 
 /// User info has no params, so a builder is unessecary.
@@ -23,7 +26,7 @@ impl<'a> Info<'a> {
     }
 
     /// finally send the request
-    pub fn send(&self) -> String {
+    pub fn send(&self) -> Option<User> {
 
 
     	let info_path = format!("{}/info", USER_PATH);
@@ -42,6 +45,14 @@ impl<'a> Info<'a> {
     		.unwrap()
     		.read_to_string(&mut response);
 
-    	response
+        
+        
+
+    	let result: Root = serde_json::from_str(&response).unwrap();
+
+        return match result.response {
+            Response::user(user) => Some(user),
+            _  => None
+        }
     }
 }

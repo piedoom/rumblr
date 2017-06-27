@@ -19,5 +19,5 @@ fn main(){
 
 	let r = c.user_info().send();
 
-    println!("{}", r);
+    println!("{:?}", r.unwrap());
 }
