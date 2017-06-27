@@ -1,10 +1,8 @@
 use client::Client;
-use http_method::HttpMethod;
-use hyper::header::Authorization;
-use std::io::Read;
-use serde_json;
 use data::user::User;
-use data::root::{Root,Response};
+use data::root::{Response};
+use hyper::method::Method;
+use utility;
 use super::USER_PATH;
 
 /// User info has no params, so a builder is unessecary.
@@ -29,26 +27,14 @@ impl<'a> Info<'a> {
     pub fn send(&self) -> Option<User> {
 
 
-    	let info_path = format!("{}/info", USER_PATH);
+    	let url = format!("{}/info", USER_PATH);
 
     	let auth_header = self.client.build_request(
     		vec![], 
-    		HttpMethod::Get,
-    		&info_path );
-
-    	let mut response = String::new();
-
-    	self.client.hyper
-    		.get(&info_path)
-    		.header(Authorization(auth_header.to_string()))
-    		.send()
-    		.unwrap()
-    		.read_to_string(&mut response);
-
+    		Method::Get,
+    		&url );
         
-        
-
-    	let result: Root = serde_json::from_str(&response).unwrap();
+        let result = utility::send_request(self.client, Method::Get, url, auth_header);
 
         return match result.response {
             Response::user(user) => Some(user),

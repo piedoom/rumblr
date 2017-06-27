@@ -1,9 +1,9 @@
 use hyper;
 use oauthcli::{ OAuthAuthorizationHeader, OAuthAuthorizationHeaderBuilder, SignatureMethod };
-use http_method::HttpMethod;
+use hyper::method::Method;
 use oauthcli::url;
-use user_methods;
-// use blog_methods;
+use user;
+use blog;
 
 /// The Client struct that we will use to interface with our API
 #[allow(dead_code)]
@@ -34,7 +34,7 @@ impl<'a> Client<'a>{
     /// * `params` - a vector of tuple parameters to pass into the request
     /// * `method` - the HTTP method - either a GET or POST
     /// * `url` - the base URL for this call, usually based off of `BLOG_PATH` or `USER_PATH`
-    pub fn build_request(&self, params: Vec<(String, String)>, method: HttpMethod, url: &str) -> OAuthAuthorizationHeader {
+    pub fn build_request(&self, params: Vec<(String, String)>, method: Method, url: &str) -> OAuthAuthorizationHeader {
         OAuthAuthorizationHeaderBuilder::new(
             method.to_string(),
             &url::Url::parse(url).unwrap(),
@@ -48,8 +48,12 @@ impl<'a> Client<'a>{
     }
 
     /// METHODS
-    pub fn user_info(&self) -> user_methods::info::Info {
-        user_methods::info::Info::new(self)
+    pub fn user_info(&self) -> user::info::Info {
+        user::info::Info::new(self)
+    }
+
+    pub fn blog_info(&self) -> blog::info::Info {
+        blog::info::Info::new(self)
     }
 }
 
