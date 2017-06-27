@@ -1,6 +1,7 @@
 /// Contains information about a user blog.  
 /// Some data is wrapped in an optional as it may not be visible depending on if the current user is the admin
 /// of the blog.
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Blog {
 
 	/// These intial fields are accessible publicly.  All `BlogInfo` structures
@@ -89,11 +90,14 @@ pub struct Blog {
 	pub twitter_send: 		Option<bool>,
 	/// The visibility of this blog (known as `type` in the JSON API).  
 	/// Can be public or private.
+	#[serde(rename="type")]
 	pub visibility: 				Option<BlogVisibility>,
 }
 
 /// See `type` field on `BlogInfo` struct.
+#[derive(Serialize, Deserialize, Debug)]
+#[allow(non_camel_case_types)] // serde limitation
 pub enum BlogVisibility {
-	Private,
-	Public
+	private,
+	public
 }

@@ -7,7 +7,7 @@ pub struct User {
 	pub likes: u32,
 	pub following: u32,
 	pub default_post_format: String, // TODO: change to enum
-	// the array of blogs a user owns
-	// pub blogs: Vec<BlogInfo>
+	/// The array of blogs a user owns
+	pub blogs: Vec<Blog>
 }
 
