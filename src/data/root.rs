@@ -1,6 +1,5 @@
 use data::user::User;
 use data::blog::Blog;
-use data::avatar::Avatar;
 
 /// The Tumblr API often gives us data wrapped in an object that we don't necessarily 
 /// care about.  We need to deserialize the whole thing, anyways, though.
@@ -15,6 +14,5 @@ pub struct Root {
 #[derive(Serialize, Deserialize, Debug)]
 pub enum Response {
 	user(User),
-	blog(Blog),
-	avatar(Avatar)
+	blog(Blog)
 }

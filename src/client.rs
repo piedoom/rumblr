@@ -56,4 +56,4 @@ impl<'a> Client<'a>{
         blog::info::Info::new(&self, blog)
     }
 
-
+}
