@@ -17,14 +17,16 @@ fn main(){
 		.. Client::default()
 	};
 
-	// // get current user primary blog name
-	let r = c.user_info().send();
-    println!("{}", r.unwrap().name);
+	// // // get current user primary blog name
+	// let r = c.user_info().send();
+ //    println!("{}", r.unwrap().name);
 
-    // get staff's blog name
-    let r = c.blog_info("staff").send();
-    println!("{}", r.unwrap().title);
+ //    // get staff's blog name
+ //    let r = c.blog_info("staff").send();
+ //    println!("{}", r.unwrap().title);
 
-    
+    // get some posts
+    let r = c.posts("staff").send();
+    println!("{:?}", r.unwrap())
 
 }

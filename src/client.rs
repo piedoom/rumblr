@@ -56,4 +56,8 @@ impl<'a> Client<'a>{
         blog::info::Info::new(&self, blog)
     }
 
+    pub fn posts(&self, blog: &'a str) -> blog::post::Posts {
+        blog::post::Posts::new(&self, blog)
+    }
+
 }

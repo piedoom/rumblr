@@ -10,3 +10,5 @@ pub mod user;
 pub mod data;
 pub mod utility;
 pub mod error;
+pub mod post_type;
+pub mod format;
