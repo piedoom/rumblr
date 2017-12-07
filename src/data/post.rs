@@ -1,6 +1,3 @@
-use post_type::PostType;
-use format::Format;
-
 #[derive(Serialize, Deserialize, Debug)]
 #[allow(non_camel_case_types)]
 enum PostState {

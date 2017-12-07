@@ -14,5 +14,5 @@ pub struct Root {
 pub enum Response {
 	user(User),
 	blog(Blog),
-	posts(Vec<Posts>)
+	posts(Vec<Post>)
 }
