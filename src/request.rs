@@ -5,12 +5,10 @@ use error::TumblrError;
 use client::Client;
 use oauthcli::{ OAuthAuthorizationHeader, OAuthAuthorizationHeaderBuilder, SignatureMethod };
 use oauthcli::url;
-use utility;
 use data::root::Root;
 use serde_json;
 use std::io::Read;
 use hyper::header::Authorization;
-use hyper;
 use std::collections::HashMap;
 
 
@@ -25,7 +23,7 @@ pub struct Request<'a> {
 
 impl<'a> Request<'a> {
 	/// get a particular request and return the outcome
-	pub fn go(&self) -> Result<Root, TumblrError> {
+	pub fn send(&self) -> Result<Root, TumblrError> {
 		let header = self.build_request();
 
 		// Get back the root element
@@ -35,7 +33,7 @@ impl<'a> Request<'a> {
 		match result {
 			// First make sure we had no errors
 			Ok(t) => Ok(t),
-			Err(e) => Err(TumblrError::Parse)
+			Err(_) => Err(TumblrError::Parse)
 		}
 	}
 
@@ -131,7 +129,7 @@ impl<'a> RequestFactory<'a> {
 	}
 
 	/// Finalize the factory and return a `Request`
-	pub fn finalize(mut self) -> Request<'a> {
+	pub fn finalize(self) -> Request<'a> {
 		Request {
 			method: self.method,
 			url: self.url,
@@ -139,4 +137,39 @@ impl<'a> RequestFactory<'a> {
 			client: self.client
 		}
 	}
+}
+
+// Some useful utility functions
+
+/// Create an `OAuthAuthorizationHeader` with blank data
+#[allow(dead_code)]
+fn default_auth_header() -> OAuthAuthorizationHeader {
+	OAuthAuthorizationHeaderBuilder::new(
+	    "GET",
+	    &url::Url::parse("http://tumblr.com").unwrap(),
+	    "",
+	    "",
+	    SignatureMethod::HmacSha1
+	)
+	.token("", "")
+    .finish()
+}
+
+
+
+/// convert a `HashMap` of url params to a string
+pub fn params(hash: &HashMap<String, String>) -> String{
+    let mut result = String::new();
+    let mut first_value = true;
+    for (key, val) in hash.iter() {
+        // figure out what to prepend the param with
+        let p = match first_value {
+            true => "?",
+            _ => "&"
+        };
+        first_value = false;
+        // add our value to the URL string
+        result += &format!("{}{}={}", p, key, val);
+    }
+    result
 }

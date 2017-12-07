@@ -5,6 +5,5 @@ extern crate oauthcli;
 
 pub mod client;
 pub mod data;
-pub mod utility;
 pub mod error;
 pub mod request;

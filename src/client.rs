@@ -41,7 +41,7 @@ impl<'a> Client<'a>{
     pub fn user(&self) -> Result<User, TumblrError> {
 
         let url = format!("{}/info", USER_PATH);
-        let request = RequestFactory::new(self).method(Method::Get).url(url).finalize().go();
+        let request = RequestFactory::new(self).method(Method::Get).url(url).finalize().send();
 
         match request {
             Ok(t) => match t.response {
