@@ -1,7 +1,7 @@
 //! Constructor for requests to be built without repetition
 
 use client::Client;
-use data::root::Root;
+use data::Root;
 use error::TumblrError;
 use hyper::header::Authorization;
 use hyper::method::Method;
@@ -24,16 +24,9 @@ impl<'a> Request<'a> {
     /// get a particular request and return the outcome
     pub fn send(&self) -> Result<Root, TumblrError> {
         let header = self.build_request();
-
         // Get back the root element
-        let result = self.send_and_deserialize(header);
-
-        // match and return root object
-        match result {
-            // First make sure we had no errors
-            Ok(t) => Ok(t),
-            Err(_) => Err(TumblrError::Parse),
-        }
+        let result = self.send_and_deserialize(header)?;
+        Ok(result)
     }
 
     /// Constructs a request with Hyper and oauth headers
@@ -59,22 +52,17 @@ impl<'a> Request<'a> {
         let req = self.clone();
 
         // Send the request
-        let response = req
+        let mut response = req
             .client
             .hyper
             .request(req.method, &req.url)
             .header(Authorization(header.to_string()))
-            .send();
-
-        // Return early if the request failed
-        if response.is_err() {
-            return Err(TumblrError::Network);
-        }
+            .send()?;
 
         // Read our response and write to a buffer.
         // We can just `unwrap` here since we already error checked.
         let mut buf = String::new();
-        response.unwrap().read_to_string(&mut buf);
+        response.read_to_string(&mut buf);
 
         // deserialize from JSON to a `Root` object
         let result = serde_json::from_str(&buf);

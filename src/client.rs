@@ -1,10 +1,13 @@
-use data::root::Response;
-use data::user::User;
+use data::Post;
+use data::Response;
+use data::User;
+
 use error::TumblrError;
 use hyper;
 use hyper::method::Method;
 use request::RequestFactory;
 
+pub const PATH: &str = "http://api.tumblr.com/v2";
 pub const USER_PATH: &str = "http://api.tumblr.com/v2/user";
 
 /// Allows us to easily interface with the Tumblr API
@@ -31,9 +34,7 @@ impl<'a> Default for Client<'a> {
 }
 
 impl<'a> Client<'a> {
-    // pub fn generic_request<T>(&self) ->
-
-    // METHODS
+    // USER METHODS
 
     /// Return the user's data struct
     pub fn user(&self) -> Result<User, TumblrError> {
@@ -53,9 +54,23 @@ impl<'a> Client<'a> {
         }
     }
 
-    /*
-    pub fn posts(&self, blog: &'a str) -> blog::post::Posts {
-        blog::post::Posts::new(&self, blog)
+    // BLOG METHODS
+
+    /// Get posts from a user
+    pub fn posts(&self, blog: &'a str) -> Result<Vec<Post>, TumblrError> {
+        let url = format!("{}/{}/posts", PATH, blog);
+        let data = RequestFactory::new(self)
+            .method(Method::Get)
+            .url(url)
+            .finalize()
+            .send();
+
+        match data {
+            Ok(t) => match t.response {
+                Response::posts(posts) => Ok(posts),
+                _ => Err(TumblrError::Parse),
+            },
+            _ => Err(TumblrError::Parse),
+        }
     }
-    */
 }
