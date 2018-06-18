@@ -2,7 +2,7 @@
 
 use client::Client;
 use data::Root;
-use error::TumblrError;
+use error::Error;
 use hyper::header::Authorization;
 use hyper::method::Method;
 use oauthcli::url;
@@ -22,7 +22,7 @@ pub struct Request<'a> {
 
 impl<'a> Request<'a> {
     /// get a particular request and return the outcome
-    pub fn send(&self) -> Result<Root, TumblrError> {
+    pub fn send(&self) -> Result<Root, Error> {
         let header = self.build_request();
         // Get back the root element
         let result = self.send_and_deserialize(header)?;
@@ -45,10 +45,7 @@ impl<'a> Request<'a> {
     }
 
     /// Send a given request and deserialize the response
-    pub fn send_and_deserialize(
-        &self,
-        header: OAuthAuthorizationHeader,
-    ) -> Result<Root, TumblrError> {
+    pub fn send_and_deserialize(&self, header: OAuthAuthorizationHeader) -> Result<Root, Error> {
         let req = self.clone();
 
         // Send the request
@@ -69,7 +66,7 @@ impl<'a> Request<'a> {
 
         match result {
             Ok(result) => Ok(result),
-            Err(_) => Err(TumblrError::Parse),
+            Err(_) => Err(Error::Parse),
         }
     }
 }

@@ -2,7 +2,7 @@ use data::Post;
 use data::Response;
 use data::User;
 
-use error::TumblrError;
+use error::Error;
 use hyper;
 use hyper::method::Method;
 use request::RequestFactory;
@@ -37,7 +37,7 @@ impl<'a> Client<'a> {
     // USER METHODS
 
     /// Return the user's data struct
-    pub fn user(&self) -> Result<User, TumblrError> {
+    pub fn user(&self) -> Result<User, Error> {
         let url = format!("{}/info", USER_PATH);
         let data = RequestFactory::new(self)
             .method(Method::Get)
@@ -48,16 +48,16 @@ impl<'a> Client<'a> {
         match data {
             Ok(t) => match t.response {
                 Response::user(user) => Ok(user),
-                _ => Err(TumblrError::Parse),
+                _ => Err(Error::Parse),
             },
-            _ => Err(TumblrError::Parse),
+            _ => Err(Error::Parse),
         }
     }
 
     // BLOG METHODS
 
     /// Get posts from a user
-    pub fn posts(&self, blog: &'a str) -> Result<Vec<Post>, TumblrError> {
+    pub fn posts(&self, blog: &'a str) -> Result<Vec<Post>, Error> {
         let url = format!("{}/{}/posts", PATH, blog);
         let data = RequestFactory::new(self)
             .method(Method::Get)
@@ -68,9 +68,9 @@ impl<'a> Client<'a> {
         match data {
             Ok(t) => match t.response {
                 Response::posts(posts) => Ok(posts),
-                _ => Err(TumblrError::Parse),
+                _ => Err(Error::Parse),
             },
-            _ => Err(TumblrError::Parse),
+            _ => Err(Error::Parse),
         }
     }
 }

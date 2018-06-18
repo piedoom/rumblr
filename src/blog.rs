@@ -3,7 +3,7 @@
 use client::Client;
 use data::root::Response;
 use data::user::User;
-use error::TumblrError;
+use error::Error;
 use hyper::method::Method;
 use utility;
 
@@ -26,7 +26,7 @@ impl<'a> Info<'a> {
     }
 
     /// Return an `Info` struct about the user and blogs that we own.
-    pub fn send(&self) -> Result<User, TumblrError> {
+    pub fn send(&self) -> Result<User, Error> {
         let url = format!("{}/info", USER_PATH);
 
         // Build the auth header for our request
@@ -38,9 +38,9 @@ impl<'a> Info<'a> {
         match result {
             Ok(t) => match t.response {
                 Response::user(user) => Ok(user),
-                _ => Err(TumblrError::Parse),
+                _ => Err(Error::Parse),
             },
-            Err(_) => Err(TumblrError::Parse),
+            Err(_) => Err(Error::Parse),
         }
     }
 }
