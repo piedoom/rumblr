@@ -17,7 +17,7 @@ impl error::Error for TumblrError {
     }
 }
 
-impl fmt::Display for TumblrError {  
+impl fmt::Display for TumblrError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             TumblrError::Network => f.write_str("NetworkError"),
