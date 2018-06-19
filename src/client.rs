@@ -7,7 +7,7 @@ use hyper;
 use hyper::method::Method;
 use request::RequestFactory;
 
-pub const PATH: &str = "http://api.tumblr.com/v2";
+pub const BLOG_PATH: &str = "http://api.tumblr.com/v2/blog";
 pub const USER_PATH: &str = "http://api.tumblr.com/v2/user";
 
 /// Allows us to easily interface with the Tumblr API
@@ -55,7 +55,8 @@ impl<'a> Client<'a> {
 
     /// Get posts from a user
     pub fn posts(&self, blog: &'a str) -> Result<Vec<Post>, Error> {
-        let url = format!("{}/{}/posts", PATH, blog);
+        let url = format!("{}/{}/posts", BLOG_PATH, blog);
+        println!("{}", url);
         let data = RequestFactory::new(self)
             .method(Method::Get)
             .url(url)
