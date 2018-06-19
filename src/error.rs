@@ -10,6 +10,7 @@ pub enum Error {
     IO(std::io::Error),
     Serde(serde_json::Error),
     Request(hyper::Error),
+    ParseError(hyper::error::ParseError),
 }
 
 impl Display for Error {
@@ -19,6 +20,7 @@ impl Display for Error {
             Error::Serde(e) => e.fmt(f),
             Error::Request(e) => e.fmt(f),
             Error::IO(e) => e.fmt(f),
+            Error::ParseError(e) => e.fmt(f),
         }
     }
 }
@@ -38,5 +40,11 @@ impl From<serde_json::Error> for Error {
 impl From<std::io::Error> for Error {
     fn from(e: std::io::Error) -> Self {
         Error::IO(e)
+    }
+}
+
+impl From<hyper::error::ParseError> for Error {
+    fn from(e: hyper::error::ParseError) -> Self {
+        Error::ParseError(e)
     }
 }
