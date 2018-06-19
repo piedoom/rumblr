@@ -43,14 +43,11 @@ impl<'a> Client<'a> {
             .method(Method::Get)
             .url(url)
             .finalize()
-            .send();
+            .send()?;
 
-        match data {
-            Ok(t) => match t.response {
-                Response::user(user) => Ok(user),
-                _ => Err(Error::Parse),
-            },
-            _ => Err(Error::Parse),
+        match data.response {
+            Response::user(user) => Ok(user),
+            _ => Err(Error::Unknown),
         }
     }
 
@@ -63,14 +60,11 @@ impl<'a> Client<'a> {
             .method(Method::Get)
             .url(url)
             .finalize()
-            .send();
+            .send()?;
 
-        match data {
-            Ok(t) => match t.response {
-                Response::posts(posts) => Ok(posts),
-                _ => Err(Error::Parse),
-            },
-            _ => Err(Error::Parse),
+        match data.response {
+            Response::posts(posts) => Ok(posts),
+            _ => Err(Error::Unknown),
         }
     }
 }

@@ -33,14 +33,11 @@ impl<'a> Info<'a> {
         let auth_header = self.client.build_request(vec![], Method::Get, &url);
 
         // get and deserialize our request
-        let result = utility::send_and_deserialize(self.client, Method::Get, url, auth_header);
+        let data = utility::send_and_deserialize(self.client, Method::Get, url, auth_header)?;
 
-        match result {
-            Ok(t) => match t.response {
-                Response::user(user) => Ok(user),
-                _ => Err(Error::Parse),
-            },
-            Err(_) => Err(Error::Parse),
+        match data.response {
+            Response::user(user) => Ok(user),
+            _ => Err(Error::Parse),
         }
     }
 }

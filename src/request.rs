@@ -59,15 +59,10 @@ impl<'a> Request<'a> {
         // Read our response and write to a buffer.
         // We can just `unwrap` here since we already error checked.
         let mut buf = String::new();
-        response.read_to_string(&mut buf);
+        response.read_to_string(&mut buf)?;
 
         // deserialize from JSON to a `Root` object
-        let result = serde_json::from_str(&buf);
-
-        match result {
-            Ok(result) => Ok(result),
-            Err(_) => Err(Error::Parse),
-        }
+        serde_json::from_str(&buf).map_err(|err| Error::Serde(err))
     }
 }
 
@@ -80,6 +75,7 @@ pub struct RequestFactory<'a> {
     client: &'a Client<'a>,
 }
 
+#[allow(dead_code)]
 impl<'a> RequestFactory<'a> {
     /// Initialize a new default `RequestFactory`
     pub fn new(client: &'a Client) -> RequestFactory<'a> {
@@ -128,22 +124,8 @@ impl<'a> RequestFactory<'a> {
     }
 }
 
-// Some useful utility functions
-
-/// Create an `OAuthAuthorizationHeader` with blank data
-#[allow(dead_code)]
-fn default_auth_header() -> OAuthAuthorizationHeader {
-    OAuthAuthorizationHeaderBuilder::new(
-        "GET",
-        &url::Url::parse("http://tumblr.com").unwrap(),
-        "",
-        "",
-        SignatureMethod::HmacSha1,
-    ).token("", "")
-        .finish()
-}
-
 /// convert a `HashMap` of url params to a string
+#[allow(dead_code)]
 pub fn params(hash: &HashMap<String, String>) -> String {
     let mut result = String::new();
     let mut first_value = true;
