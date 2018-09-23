@@ -23,44 +23,52 @@ pub enum Post {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Text {
-    // info: PostInfo,
+    #[serde(flatten)]
+    info: PostInfo,
     title: Option<String>,
     body: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Quote {
-    //info: PostInfo,
+    #[serde(flatten)]
+    info: PostInfo,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Link {
-    //info: PostInfo,
+    #[serde(flatten)]
+    info: PostInfo,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Answer {
-    //info: PostInfo,
+    #[serde(flatten)]
+    info: PostInfo,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Video {
-    //info: PostInfo,
+    #[serde(flatten)]
+    info: PostInfo,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Audio {
-    //info: PostInfo,
+    #[serde(flatten)]
+    info: PostInfo,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Photo {
-    //info: PostInfo,
+    #[serde(flatten)]
+    info: PostInfo,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Chat {
-    //info: PostInfo,
+    #[serde(flatten)]
+    info: PostInfo,
 }
 
 
@@ -68,17 +76,15 @@ pub struct Chat {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PostInfo {
     id: usize,
-    // #[serde(rename="type")]
-    // post_type: 			PostType,
-    // #[serde(rename="post_url")]
-    // url:				String,
-    // timestamp:			u64,
-    // date:				u64,
+    #[serde(rename="post_url")]
+    url:				    String,
+    timestamp:			    usize,
+    date:				    String,
     // format:				Format,
-    // reblog_key:			String,
-    // tags:				Vec<String>,
-    // source_url:			String,
-    // source_title:		String,
+    reblog_key:			    String,
+    tags:				    Vec<String>,
+    source_url:			    Option<String>,
+    source_title:		    Option<String>,
     // liked:				bool,
     // state:				PostState,
     // total_posts:		u32
