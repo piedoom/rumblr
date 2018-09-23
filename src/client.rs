@@ -1,5 +1,4 @@
-use data::{User, Root};
-use data::Response;
+use data::*;
 use error::Error;
 use reqwest;
 use reqwest::{Method, header::AUTHORIZATION};
@@ -86,17 +85,35 @@ impl<'a> Client<'a> {
 
     // USER METHODS
 
-    //Return the user's data struct
+    /// Get our user data 
     pub fn user(&self) -> Result<User, Error> {
         let root: Root = self.get("/user/info", None)?;
         match root.response {
-            Response::user(u) => Ok(u),
+            Response::User(u) => Ok(u),
             _ => Err(Error::Unknown), 
+        }
+    }
+
+    /// Get our dashboard
+    pub fn dashboard(&self) -> Result<Vec<Post>, Error> {
+        let root: Root = self.get("/user/dashboard", None)?;
+        match root.response {
+            Response::Posts(p) => Ok(p),
+            _ => Err(Error::Unknown), 
+        }
+    }
+
+    // BLOG METHODS
+    /// Get another user's information
+    pub fn blog(&self, blog: &'a str) -> Result<Blog, Error> {
+        let root: Root = self.get(&format!("/blog/{}/info", blog), None)?;
+        match root.response {
+            Response::Blog(b) => Ok(b),
+            _ => Err(Error::Unknown),
         }
     }
 }
 
-// BLOG METHODS
 
 // Get posts from a user
     /*

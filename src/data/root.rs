@@ -9,10 +9,10 @@ pub struct Root {
     pub response: Response,
 }
 
-#[allow(non_camel_case_types)] // serde enum limitations
+#[serde(rename_all = "snake_case")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum Response {
-    user(User),
-    blog(Blog),
-    posts(Vec<Post>),
+    User(User),
+    Blog(Blog),
+    Posts(Vec<Post>),
 }

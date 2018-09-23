@@ -18,14 +18,13 @@ fn main() {
     };
 
     // get current user primary blog name
-    println!("{:?}", c.user());
-    // println!("{}", r.unwrap().name);
+    println!("Your blog name is: {}", c.user().unwrap().name);
 
-    //    // get staff's blog name
-    //    let r = c.blog_info("staff").send();
-    //    println!("{}", r.unwrap().title);
+    // get staff's blog name
+	println!("Staff name is: {}", c.blog("staff").unwrap().name);
 
-    // get some posts
-    //let r = c.posts("staff");
-    //println!("{:?}", r.unwrap())
+    // get our dashboard
+	println!("Our dashboard: {:?}", c.dashboard().unwrap())
+    // let r = c.posts("staff");
+    // println!("{:?}", r.unwrap())
 }
