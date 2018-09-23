@@ -15,24 +15,12 @@ pub struct Blog {
     pub can_subscribe: bool,
     /// A short user made description of the blog
     pub description: String,
-    /// Whether or not the blog is adult.  Note that
-    /// `is_nsfw` and `is_adult` seem to do the same thing.
-    /// Tumblr pushed updates to their content screening
-    /// recently and staff have confirmed that this is still changing.
-    /// Unfortunately, Tumblr does not seem to properly version their API
-    /// so this may break at any time.
-    pub is_adult: bool,
     /// Functionally similar to `is_adult` with all the same caveats.
     pub is_nsfw: bool,
     /// The name of this blog.  `https://{name}.tumblr.com`.
     pub name: String,
     /// The number of posts for this blog.
     pub posts: u32,
-    /// Unknown.  Most likely an enum of how the user can be replied to on posts.
-    /// E.g., 1 = cannot reply at all, 2 = can reply after time, 3 = can reply.
-    /// However, replying to posts is not even a documented API feature so this field is largley useless
-    /// for the time being.
-    pub reply_conditions: String,
     pub share_likes: bool,
     /// Similar to `can_subscribe`.  This is NOT the same as following.
     pub subscribed: bool,

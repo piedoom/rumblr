@@ -1,4 +1,5 @@
-use data::User;
+use data::{User, Root};
+use data::Response;
 use error::Error;
 use reqwest;
 use reqwest::{Method, header::AUTHORIZATION};
@@ -87,7 +88,11 @@ impl<'a> Client<'a> {
 
     //Return the user's data struct
     pub fn user(&self) -> Result<User, Error> {
-        self.get("/user/info", None)
+        let root: Root = self.get("/user/info", None)?;
+        match root.response {
+            Response::user(u) => Ok(u),
+            _ => Err(Error::Unknown), 
+        }
     }
 }
 
