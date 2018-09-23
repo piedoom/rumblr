@@ -1,8 +1,7 @@
-extern crate hyper;
+extern crate reqwest;
 extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
-extern crate hyper_tls;
 extern crate oauthcli;
 extern crate serde;
 

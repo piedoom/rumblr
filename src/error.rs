@@ -1,4 +1,4 @@
-use hyper;
+use reqwest;
 use serde_json;
 use std;
 use std::convert::From;
@@ -10,7 +10,7 @@ pub enum Error {
     Unknown,
     IO(std::io::Error),
     Serde(serde_json::Error),
-    Request(hyper::Error),
+    Request(reqwest::Error),
     ParseError(oauthcli::url::ParseError),
 }
 
@@ -26,8 +26,8 @@ impl Display for Error {
     }
 }
 
-impl From<hyper::Error> for Error {
-    fn from(e: hyper::Error) -> Self {
+impl From<reqwest::Error> for Error {
+    fn from(e: reqwest::Error) -> Self {
         Error::Request(e)
     }
 }

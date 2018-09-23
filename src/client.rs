@@ -1,8 +1,7 @@
 use data::User;
 use error::Error;
-use hyper;
-use hyper::{header::AUTHORIZATION, Method, client::HttpConnector, Uri, Request, header::HeaderValue};
-// use hyper_tls::HttpsConnector;
+use reqwest;
+use reqwest::{Method, header::AUTHORIZATION};
 use oauthcli::{
     url::Url, OAuthAuthorizationHeader, OAuthAuthorizationHeaderBuilder, SignatureMethod,
 };
@@ -19,7 +18,7 @@ pub struct Client<'a> {
     pub consumer_secret: &'a str,
     pub oauth_token: &'a str,
     pub oauth_token_secret: &'a str,
-    pub hyper: hyper::Client<HttpConnector>,
+    pub http: reqwest::Client,
 }
 
 /// Return an empty default `Client`
@@ -30,7 +29,7 @@ impl<'a> Default for Client<'a> {
             consumer_secret: "",
             oauth_token: "",
             oauth_token_secret: "",
-            hyper: hyper::Client::new(),
+            http: reqwest::Client::new(),
         }
     }
 }
@@ -68,33 +67,20 @@ impl<'a> Client<'a> {
         T: serde::de::DeserializeOwned,
     {
         // build our url
-        let url = Uri::from_static(&format!("{}{}", API_URL, endpoint));
+        let url = &format!("{}{}", API_URL, endpoint);
         // create an oauth header
         let auth = self.get_auth_header(Method::GET, &url.to_string(), params)?.to_string();
-        // use hyper to retrieve data
-        /*let mut res = self
-            .hyper
+        
+        let req = self.http
             .get(url)
-            .insert(AUTHORIZATION, auth)
-            .send()
-            .map_err(|e| Error::Request(e))?;*/
-        let mut req = Request::new();
-        *req.method_mut() = Method::POST;
-        *req.uri_mut() = url.clone();
-        req.headers_mut().insert(
-            AUTHORIZATION,
-            HeaderValue::from_static(&auth)
-        );
+            .header(AUTHORIZATION, auth)
+            .send()?
+            .json();
 
-        let res = self.hyper.request(req);    
-
-        let (parts, body) = res.into_parts();
-        println!("{:?}", body);
-
-        // read and parse our data
-        let buf: String = String::new();
-        res.read_to_string(&mut buf.to_string())?;
-        serde_json::from_str::<T>(&buf).map_err(|e| Error::Serde(e))
+        match req {
+            Ok(data) => Ok(data),
+            Err(e) => Err(Error::Request(e)),            
+        }
     }
 
     // USER METHODS
