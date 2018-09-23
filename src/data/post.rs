@@ -7,6 +7,13 @@ enum PostState {
     Private,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "snake_case")]
+enum Format {
+    Html,
+    Markdown,
+}
+
 /// All generic fields guarenteed to be present on every type of post
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Post {
@@ -15,14 +22,13 @@ pub struct Post {
     url:				    String,
     timestamp:			    usize,
     date:				    String,
-    // format:				Format,
+    format:				    Format,
     reblog_key:			    String,
     tags:				    Vec<String>,
     source_url:			    Option<String>,
     source_title:		    Option<String>,
-    // liked:				bool,
-    // state:				PostState,
-    // total_posts:		u32
+    liked:				    bool,
+    state:				    PostState,
     #[serde(flatten)]
     content: Content,
 }
@@ -48,17 +54,39 @@ pub struct Text {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Quote {
-
+    /// The actual quote
+    title: String,
+    /// The source of the quote (optional)
+    source: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Link {
-
+    /// The optional title of the page the link points to
+    title: String,
+    /// The link itself
+    url: String,
+    /// The author of the article that the link points to
+    author: Option<String>,
+    /// An excerpt from the article that the link points to
+    excerpt: Option<String>,
+    /// The publisher of the article that the link points to
+    publisher: String,
+    // photos:
+    /// An optional user-supplied description
+    description: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Answer {
-
+    /// The blog that sent this ask, or answered it if it was privately answered
+    asking_name: String,
+    /// The blog URL that sent this ask, or answered it if it was privately answered
+    asking_url: String,
+    /// The question being asked
+    question: String,
+    /// The answer given
+    answer: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -73,7 +101,7 @@ pub struct Audio {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Photo {
-
+    // photos: 
 }
 
 #[derive(Serialize, Deserialize, Debug)]
