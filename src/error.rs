@@ -3,6 +3,7 @@ use serde_json;
 use std;
 use std::convert::From;
 use std::fmt::{Display, Formatter, Result};
+use oauthcli;
 
 #[derive(Debug)]
 pub enum Error {
@@ -10,7 +11,7 @@ pub enum Error {
     IO(std::io::Error),
     Serde(serde_json::Error),
     Request(hyper::Error),
-    ParseError(hyper::error::ParseError),
+    ParseError(oauthcli::url::ParseError),
 }
 
 impl Display for Error {
@@ -43,8 +44,8 @@ impl From<std::io::Error> for Error {
     }
 }
 
-impl From<hyper::error::ParseError> for Error {
-    fn from(e: hyper::error::ParseError) -> Self {
+impl From<oauthcli::url::ParseError> for Error {
+    fn from(e: oauthcli::url::ParseError) -> Self {
         Error::ParseError(e)
     }
 }
