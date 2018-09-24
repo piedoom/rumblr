@@ -1,9 +1,9 @@
+use oauthcli;
 use reqwest;
 use serde_json;
 use std;
 use std::convert::From;
 use std::fmt::{Display, Formatter, Result};
-use oauthcli;
 
 #[derive(Debug)]
 pub enum Error {

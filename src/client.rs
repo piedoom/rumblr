@@ -1,10 +1,10 @@
 use data::*;
 use error::Error;
-use reqwest;
-use reqwest::{Method, header::AUTHORIZATION};
 use oauthcli::{
     url::Url, OAuthAuthorizationHeader, OAuthAuthorizationHeaderBuilder, SignatureMethod,
 };
+use reqwest;
+use reqwest::{header::AUTHORIZATION, Method};
 use serde;
 use serde_json;
 use std::collections::HashMap;
@@ -69,9 +69,12 @@ impl<'a> Client<'a> {
         // build our url
         let url = &format!("{}{}", API_URL, endpoint);
         // create an oauth header
-        let auth = self.get_auth_header(Method::GET, &url.to_string(), params)?.to_string();
-        
-        let req = self.http
+        let auth = self
+            .get_auth_header(Method::GET, &url.to_string(), params)?
+            .to_string();
+
+        let req = self
+            .http
             .get(url)
             .header(AUTHORIZATION, auth)
             .send()?
@@ -79,18 +82,18 @@ impl<'a> Client<'a> {
 
         match req {
             Ok(data) => Ok(data),
-            Err(e) => Err(Error::Request(e)),            
+            Err(e) => Err(Error::Request(e)),
         }
     }
 
     // USER METHODS
 
-    /// Get our user data 
+    /// Get our user data
     pub fn user(&self) -> Result<User, Error> {
         let root: Root = self.get("/user/info", None)?;
         match root.response {
             Response::User(u) => Ok(u),
-            _ => Err(Error::Unknown), 
+            _ => Err(Error::Unknown),
         }
     }
 
@@ -99,7 +102,7 @@ impl<'a> Client<'a> {
         let root: Root = self.get("/user/dashboard", None)?;
         match root.response {
             Response::Posts(p) => Ok(p),
-            _ => Err(Error::Unknown), 
+            _ => Err(Error::Unknown),
         }
     }
 
@@ -113,7 +116,6 @@ impl<'a> Client<'a> {
         }
     }
 }
-
 
 // Get posts from a user
     /*

@@ -18,17 +18,17 @@ enum Format {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Post {
     id: usize,
-    #[serde(rename="post_url")]
-    url:				    String,
-    timestamp:			    usize,
-    date:				    String,
-    format:				    Format,
-    reblog_key:			    String,
-    tags:				    Vec<String>,
-    source_url:			    Option<String>,
-    source_title:		    Option<String>,
-    liked:				    bool,
-    state:				    PostState,
+    #[serde(rename = "post_url")]
+    url: String,
+    timestamp: usize,
+    date: String,
+    format: Format,
+    reblog_key: String,
+    tags: Vec<String>,
+    source_url: Option<String>,
+    source_title: Option<String>,
+    liked: bool,
+    state: PostState,
     #[serde(flatten)]
     content: Content,
 }
@@ -90,21 +90,15 @@ pub struct Answer {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Video {
-
-}
+pub struct Video {}
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Audio {
-
-}
+pub struct Audio {}
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Photo {
-    // photos: 
+    // photos:
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Chat {
-
-}
+pub struct Chat {}

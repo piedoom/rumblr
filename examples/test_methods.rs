@@ -21,10 +21,10 @@ fn main() {
     println!("Your blog name is: {}", c.user().unwrap().name);
 
     // get staff's blog name
-	println!("Staff name is: {}", c.blog("staff").unwrap().name);
+    println!("Staff name is: {}", c.blog("staff").unwrap().name);
 
     // get our dashboard
-	println!("Our dashboard: {:?}", c.dashboard().unwrap())
+    println!("Our dashboard: {:?}", c.dashboard().unwrap())
     // let r = c.posts("staff");
     // println!("{:?}", r.unwrap())
 }
