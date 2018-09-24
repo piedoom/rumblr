@@ -116,21 +116,3 @@ impl<'a> Client<'a> {
         }
     }
 }
-
-// Get posts from a user
-    /*
-    pub fn posts(&self, blog: &'a str) -> Result<Vec<Post>, Error> {
-        let url = format!("{}/{}/posts", BLOG_PATH, blog);
-        println!("{}", url);
-        let data = RequestFactory::new(self)
-            .method(Method::Get)
-            .url(url)
-            .finalize()
-            .send()?;
-
-        match data.response {
-            Response::posts(posts) => Ok(posts),
-            _ => Err(Error::Unknown),
-        }
-    }
-    */
