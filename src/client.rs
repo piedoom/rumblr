@@ -6,10 +6,16 @@ use oauthcli::{
 use reqwest;
 use reqwest::{header::AUTHORIZATION, Method};
 use serde;
-use serde_json;
 use std::collections::HashMap;
-use std::io::Read;
+
+#[cfg(test)]
+use mockito;
+
+#[cfg(not(test))]
 pub const API_URL: &str = "http://api.tumblr.com/v2";
+
+#[cfg(test)]
+pub const API_URL: &str = &mockito::server_url();
 
 /// Allows us to easily interface with the Tumblr API
 #[allow(dead_code)]
