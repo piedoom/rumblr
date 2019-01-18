@@ -1,5 +1,5 @@
-use data::*;
-use error::Error;
+use crate::data::*;
+use crate::Error;
 use oauthcli::{
     url::Url, OAuthAuthorizationHeader, OAuthAuthorizationHeaderBuilder, SignatureMethod,
 };
@@ -7,15 +7,6 @@ use reqwest;
 use reqwest::{header::AUTHORIZATION, Method};
 use serde;
 use std::collections::HashMap;
-
-#[cfg(test)]
-use mockito;
-
-#[cfg(not(test))]
-pub const API_URL: &str = "http://api.tumblr.com/v2";
-
-#[cfg(test)]
-pub const API_URL: &str = &mockito::server_url();
 
 /// Allows us to easily interface with the Tumblr API
 #[allow(dead_code)]
@@ -73,7 +64,7 @@ impl<'a> Client<'a> {
         T: serde::de::DeserializeOwned,
     {
         // build our url
-        let url = &format!("{}{}", API_URL, endpoint);
+        let url = &format!("{}{}", crate::api_url(), endpoint);
         // create an oauth header
         let auth = self
             .get_auth_header(Method::GET, &url.to_string(), params)?

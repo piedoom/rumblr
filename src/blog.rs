@@ -8,7 +8,7 @@ use hyper::method::Method;
 use utility;
 
 /// Const path strings
-pub const USER_PATH: &str = "http://api.tumblr.com/v2/user";
+pub const USER_PATH: &str = format!("{}/user", crate::API_URL);
 
 /// User info has no params, so a builder is unessecary.
 /// However, we use one anyway to stay consistent.

@@ -1,5 +1,5 @@
 extern crate rumblr;
-use rumblr::client::Client;
+use rumblr::Client;
 use std::env;
 
 fn main() {

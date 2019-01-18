@@ -1,6 +1,6 @@
-use data::blog::Blog;
-use data::post::Post;
-use data::user::User;
+use crate::data::Blog;
+use crate::data::Post;
+use crate::data::User;
 
 /// The Tumblr API often gives us data wrapped in an object that we don't necessarily
 /// care about.  We need to deserialize the whole thing, anyways, though.

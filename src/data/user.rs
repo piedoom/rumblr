@@ -1,4 +1,4 @@
-use data::blog::Blog;
+use crate::data::Blog;
 
 /// Contains all properties relevant to the UserInfo API call
 #[derive(Serialize, Deserialize, Debug)]

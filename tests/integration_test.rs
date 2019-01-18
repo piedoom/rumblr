@@ -1,11 +1,19 @@
 #[cfg(test)]
 mod tests {
-    use mockito;
-    use rumblr::client::Client;
+    use mockito::mock;
+    use rumblr::Client;
 
     #[test]
     fn get_user() {
-        let result = Client::user();
-        assert_eq!(result, "staff");
+        let _m = mock("GET", "/user/info")
+            .match_header("content-type", "application/json")
+            .with_header("content-type", "application/json")
+            .with_body_from_file("tests/mock/user.json")
+            .with_status(200)
+            .create();
+
+        let result = Client::default().user();
+        dbg!(result);
+        //assert_eq!(result.name, "name");
     }
 }
