@@ -1,0 +1,21 @@
+language: rust
+jobs:
+  include:
+    - stage: test
+      os: linux
+      before_script:
+        - rustup toolchain install stable
+        - rustup component add --toolchain stable clippy-preview || cargo install --git https://github.com/rust-lang/rust-clippy/ --force clippy
+      script:
+        - cargo +stable clippy
+        - cargo build --verbose
+        - cargo test --verbose
+    - 
+      os: osx
+      before_script:
+        - rustup toolchain install stable
+        - rustup component add --toolchain stable clippy-preview || cargo install --git https://github.com/rust-lang/rust-clippy/ --force clippy
+      script:
+        - cargo +stable clippy
+        - cargo build --verbose
+        - cargo test --verbose
