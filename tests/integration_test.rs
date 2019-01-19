@@ -1,24 +1,27 @@
 #[cfg(test)]
 mod tests {
-    use mockito::mock;
     use rumblr::Client;
 
     fn create_client<'a>() -> Client<'a> {
         Client::default().set_url(mockito::server_url())
     }
 
-    #[test]
-    fn get_user() {
-        let _m = mock("GET", "/user/info")
+    fn mock(method: &str, path: &str) -> mockito::Mock {
+        mockito::mock(method, path)
             .match_header("content-type", "application/json")
             .with_header("content-type", "application/json")
-            .with_body_from_file("tests/mock/user/info.json")
+            .with_body_from_file(&format!("tests/mock{}.json", path))
             .with_status(200)
-            .create();
+            .create()
+    }
 
+    #[test]
+    fn get_user() {
+        let _m = mock("GET", "/user/info");
         let result = create_client()
             .user()
             .expect("Failed to get endpoint or parse user.");
         assert_eq!(result.name, "name");
     }
+
 }
