@@ -8,14 +8,18 @@ use reqwest::{header::AUTHORIZATION, Method};
 use serde;
 use std::collections::HashMap;
 
+const API_URL: &str = "http://api.tumblr.com/v2";
+
 /// Allows us to easily interface with the Tumblr API
 #[allow(dead_code)]
+#[derive(Debug)]
 pub struct Client<'a> {
     pub consumer_key: &'a str,
     pub consumer_secret: &'a str,
     pub oauth_token: &'a str,
     pub oauth_token_secret: &'a str,
     pub http: reqwest::Client,
+    pub url: String,
 }
 
 /// Return an empty default `Client`
@@ -27,6 +31,7 @@ impl<'a> Default for Client<'a> {
             oauth_token: "",
             oauth_token_secret: "",
             http: reqwest::Client::new(),
+            url: String::from(API_URL),
         }
     }
 }
@@ -58,13 +63,19 @@ impl<'a> Client<'a> {
         Ok(auth.finish())
     }
 
+    /// Set the API endpoint to an arbitrary string.
+    pub fn set_url(mut self, url: String) -> Self {
+        self.url = url;
+        self
+    }
+
     /// Generic get function used by all other client methods
     fn get<T>(&self, endpoint: &str, params: Option<HashMap<&str, &str>>) -> Result<T, Error>
     where
         T: serde::de::DeserializeOwned,
     {
         // build our url
-        let url = &format!("{}{}", crate::api_url(), endpoint);
+        let url = &format!("{}{}", self.url, endpoint);
         // create an oauth header
         let auth = self
             .get_auth_header(Method::GET, &url.to_string(), params)?
@@ -74,6 +85,7 @@ impl<'a> Client<'a> {
             .http
             .get(url)
             .header(AUTHORIZATION, auth)
+            .header("Content-Type", "application/json")
             .send()?
             .json();
 
