@@ -53,12 +53,8 @@ impl<'a> Client<'a> {
             SignatureMethod::HmacSha1,
         );
         auth.token(self.oauth_token, self.oauth_token_secret);
-        match params {
-            Some(p) => {
-                auth.request_parameters(p);
-                ()
-            }
-            _ => {}
+        if let Some(p) = params {
+            auth.request_parameters(p);
         }
         Ok(auth.finish())
     }
@@ -101,7 +97,7 @@ impl<'a> Client<'a> {
     pub fn user(&self) -> Result<User, Error> {
         let root: Root = self.get("/user/info", None)?;
         match root.response {
-            Response::User(u) => Ok(u),
+            Response::User(u) => Ok(*u),
             _ => Err(Error::Unknown),
         }
     }
@@ -120,7 +116,7 @@ impl<'a> Client<'a> {
     pub fn blog(&self, blog: &'a str) -> Result<Blog, Error> {
         let root: Root = self.get(&format!("/blog/{}/info", blog), None)?;
         match root.response {
-            Response::Blog(b) => Ok(b),
+            Response::Blog(b) => Ok(*b),
             _ => Err(Error::Unknown),
         }
     }

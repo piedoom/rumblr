@@ -12,7 +12,7 @@ pub struct Root {
 #[serde(rename_all = "snake_case")]
 #[derive(Serialize, Deserialize, Debug)]
 pub enum Response {
-    User(User),
-    Blog(Blog),
+    User(Box<User>),
+    Blog(Box<Blog>),
     Posts(Vec<Post>),
 }
