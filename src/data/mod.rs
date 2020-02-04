@@ -6,7 +6,6 @@ mod user;
 // re-exports
 pub use self::blog::Blog;
 pub use self::blog::BlogVisibility;
-pub use self::post::Post;
-pub use self::root::Response;
-pub use self::root::Root;
+pub use self::post::{Post, Submission};
+pub use self::root::{Root, RootSubmission, Response, ResponseSubmission};
 pub use self::user::User;

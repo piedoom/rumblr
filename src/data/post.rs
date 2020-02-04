@@ -5,6 +5,7 @@ enum PostState {
     Queued,
     Draft,
     Private,
+    Submission,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -44,6 +45,26 @@ pub enum Content {
     Video(Video),
     Audio(Audio),
     Chat(Chat),
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Submission {
+    id: usize,
+    #[serde(rename = "post_url")]
+    url: String,
+    timestamp: usize,
+    date: String,
+    format: Format,
+    reblog_key: String,
+    tags: Vec<String>,
+    source_url: Option<String>,
+    source_title: Option<String>,
+    liked: bool,
+    state: PostState,
+    question: String,
+    answer: String,
+    asking_name: String,
+    asking_url: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

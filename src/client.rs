@@ -120,4 +120,11 @@ impl<'a> Client<'a> {
             _ => Err(Error::Unknown),
         }
     }
+
+    /// Get asks, known as submissions. Tumblr has a really interesting history with asks that probably lead to this nomenclature. I believe it includes both
+    /// asks, submissions, and possibly "fan mail", if that is still a thing.
+    pub fn submissions(&self, blog: &'a str) -> Result<Vec<Submission>, Error> {
+        let root: RootSubmission = self.get(&format!("/blog/{}/posts/submission", blog), None)?;
+        Ok(root.response.posts)
+    }
 }
