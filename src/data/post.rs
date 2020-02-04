@@ -1,6 +1,6 @@
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "snake_case")]
-enum PostState {
+pub enum PostState {
     Published,
     Queued,
     Draft,
@@ -10,7 +10,7 @@ enum PostState {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "snake_case")]
-enum Format {
+pub enum Format {
     Html,
     Markdown,
 }
@@ -49,22 +49,22 @@ pub enum Content {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Submission {
-    id: usize,
+    pub id: usize,
     #[serde(rename = "post_url")]
-    url: String,
-    timestamp: usize,
-    date: String,
-    format: Format,
-    reblog_key: String,
-    tags: Vec<String>,
-    source_url: Option<String>,
-    source_title: Option<String>,
-    liked: bool,
-    state: PostState,
-    question: String,
-    answer: String,
-    asking_name: String,
-    asking_url: Option<String>,
+    pub url: String,
+    pub timestamp: usize,
+    pub date: String,
+    pub format: Format,
+    pub reblog_key: String,
+    pub tags: Vec<String>,
+    pub source_url: Option<String>,
+    pub source_title: Option<String>,
+    pub liked: bool,
+    pub state: PostState,
+    pub question: String,
+    pub answer: String,
+    pub asking_name: String,
+    pub asking_url: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
