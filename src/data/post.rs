@@ -1,4 +1,4 @@
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "snake_case")]
 pub enum PostState {
     Published,
@@ -8,15 +8,22 @@ pub enum PostState {
     Submission,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "snake_case")]
 pub enum Format {
     Html,
     Markdown,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub enum Filter {
+    Text,
+    Raw
+}
+
 /// All generic fields guarenteed to be present on every type of post
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Post {
     id: usize,
     #[serde(rename = "post_url")]
@@ -34,7 +41,7 @@ pub struct Post {
     content: Content,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "snake_case", tag = "type")]
 pub enum Content {
     Text(Text),
@@ -47,11 +54,14 @@ pub enum Content {
     Chat(Chat),
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Submission {
     pub id: usize,
     #[serde(rename = "post_url")]
     pub url: String,
+    pub state: PostState,
+    pub question: String,
+    pub answer: String,
     pub timestamp: usize,
     pub date: String,
     pub format: Format,
@@ -60,20 +70,17 @@ pub struct Submission {
     pub source_url: Option<String>,
     pub source_title: Option<String>,
     pub liked: bool,
-    pub state: PostState,
-    pub question: String,
-    pub answer: String,
     pub asking_name: String,
     pub asking_url: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Text {
     title: Option<String>,
     body: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Quote {
     /// The actual quote
     title: String,
@@ -81,7 +88,7 @@ pub struct Quote {
     source: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Link {
     /// The optional title of the page the link points to
     title: String,
@@ -98,7 +105,7 @@ pub struct Link {
     description: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Answer {
     /// The blog that sent this ask, or answered it if it was privately answered
     asking_name: String,
@@ -110,14 +117,14 @@ pub struct Answer {
     answer: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Video {
     /// Optional user supplied caption
     caption: Option<String>,
     // TODO: player
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Audio {
     /// Optional user supplied caption
     caption: Option<String>,
@@ -139,12 +146,12 @@ pub struct Audio {
     year: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Photo {
     // TODO:
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Chat {
     /// Optional title of the post
     title: Option<String>,

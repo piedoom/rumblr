@@ -43,6 +43,7 @@ impl<'a> Client<'a> {
         method: Method,
         url: &str,
         params: Option<HashMap<&str, &str>>,
+        body: Option<HashMap<&str, &str>>,
     ) -> Result<OAuthAuthorizationHeader, Error> {
         let parsed_url = Url::parse(&url)?;
         let mut auth = OAuthAuthorizationHeaderBuilder::new(
@@ -56,6 +57,9 @@ impl<'a> Client<'a> {
         if let Some(p) = params {
             auth.request_parameters(p);
         }
+        if let Some(b) = body {
+            auth.request_parameters(b);
+        }
         Ok(auth.finish())
     }
 
@@ -66,26 +70,42 @@ impl<'a> Client<'a> {
     }
 
     /// Generic get function used by all other client methods
-    fn get<T>(&self, endpoint: &str, params: Option<HashMap<&str, &str>>) -> Result<T, Error>
+    fn http<T>(&self, method: Method, endpoint: &str, params: Option<HashMap<&str, &str>>, body: Option<HashMap<&str, &str>>) -> Result<T, Error>
     where
         T: serde::de::DeserializeOwned,
     {
         // build our url
         let url = &format!("{}{}", self.url, endpoint);
+
         // create an oauth header
         let auth = self
-            .get_auth_header(Method::GET, &url.to_string(), params)?
+            .get_auth_header(method.clone(), &url.to_string(), params.clone(), body.clone())?
             .to_string();
-
-        let req = self
+        
+        // build the request
+        let mut req = self
             .http
-            .get(url)
+            .request(method.clone(), url)
             .header(AUTHORIZATION, auth)
-            .header("Content-Type", "application/json")
-            .send()?
-            .json();
+            .header("Content-Type", "application/json");
 
-        match req {
+        // Add URL params or a form body to the request
+        if params.is_some() {
+            req = req.query(&params.unwrap());
+        }
+
+        if body.is_some() {
+            req = req.form(&body.unwrap());
+        }
+
+        dbg!(&req);
+
+        // send the request
+        let mut response = req.send()?;
+        dbg!(&response);
+
+        let json = response.json();
+        match json {
             Ok(data) => Ok(data),
             Err(e) => Err(Error::Request(e)),
         }
@@ -95,36 +115,51 @@ impl<'a> Client<'a> {
 
     /// Get our user data
     pub fn user(&self) -> Result<User, Error> {
-        let root: Root = self.get("/user/info", None)?;
-        match root.response {
-            Response::User(u) => Ok(*u),
-            _ => Err(Error::Unknown),
+        let root: Root = self.http(Method::GET, "/user/info", None, None)?;
+        if let Some(r) = root.response {
+            if let Response::User(u) = r {
+                return Ok(*u)
+            } 
         }
+        Err(Error::Unknown)        
     }
 
     /// Get our dashboard
-    pub fn dashboard(&self) -> Result<Vec<Post>, Error> {
-        let root: Root = self.get("/user/dashboard", None)?;
-        match root.response {
-            Response::Posts(p) => Ok(p),
-            _ => Err(Error::Unknown),
+    pub fn dashboard(&self, params: Option<HashMap<&str, &str>>) -> Result<Vec<Post>, Error> {
+        let root: Root = self.http(Method::GET, "/user/dashboard", params, None)?;
+
+        if let Some(r) = root.response {
+            if let Response::Posts(p) = r {
+                return Ok(p)
+            } 
         }
+        Err(Error::Unknown)        
     }
 
     // BLOG METHODS
     /// Get another user's information
-    pub fn blog(&self, blog: &'a str) -> Result<Blog, Error> {
-        let root: Root = self.get(&format!("/blog/{}/info", blog), None)?;
-        match root.response {
-            Response::Blog(b) => Ok(*b),
-            _ => Err(Error::Unknown),
+    pub fn blog(&self, blog: &'a str, params: Option<HashMap<&str, &str>>) -> Result<Blog, Error> {
+        let root: Root = self.http(Method::GET, &format!("/blog/{}/info", blog), params, None)?;
+        if let Some(r) = root.response {
+            if let Response::Blog(b) = r {
+                return Ok(*b)
+            } 
         }
+        Err(Error::Unknown)   
     }
 
     /// Get asks, known as submissions. Tumblr has a really interesting history with asks that probably lead to this nomenclature. I believe it includes both
     /// asks, submissions, and possibly "fan mail", if that is still a thing.
-    pub fn submissions(&self, blog: &'a str) -> Result<Vec<Submission>, Error> {
-        let root: RootSubmission = self.get(&format!("/blog/{}/posts/submission", blog), None)?;
-        Ok(root.response.posts)
+    pub fn submissions(&self, blog: &'a str, params: Option<HashMap<&str, &str>>) -> Result<Vec<Submission>, Error> {
+        let root: RootSubmission = self.http(Method::GET, &format!("/blog/{}/posts/submission", blog), params, None)?;
+        match root.response {
+            Some(r) => Ok(r.posts),
+            None => Err(Error::Unknown),
+        }
+    }
+
+    pub fn edit(&self, blog: &'a str, params: Option<HashMap<&str, &str>>, body: Option<HashMap<&str, &str>>) -> Result<Root, Error> {
+        let root: Root = self.http(Method::POST, &format!("/blog/{}/post/edit", blog), params, body)?;
+        Ok(root)
     }
 }
